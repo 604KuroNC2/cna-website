@@ -1,0 +1,165 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --navy: #000080;
+  --navy-dark: #00004d;
+  --navy-light: #1a1a99;
+  --gold: #FFD700;
+  --gold-light: #FFE44D;
+  --gold-dark: #CC9900;
+  --white: #ffffff;
+  --off-white: #f8f8fc;
+  --text-muted: #94a3b8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-dm-sans, 'DM Sans', sans-serif);
+  background: var(--off-white);
+  color: #1e1e3a;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-barlow, 'Barlow Condensed', sans-serif);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--navy);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--navy-light);
+}
+
+/* Noise texture overlay */
+.noise-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Gold shimmer text */
+.gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--gold-dark) 0%,
+    var(--gold) 30%,
+    #fff7aa 50%,
+    var(--gold) 70%,
+    var(--gold-dark) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Navy gradient background */
+.navy-gradient {
+  background: linear-gradient(
+    135deg,
+    #00003a 0%,
+    #000060 30%,
+    #000080 60%,
+    #0000a0 100%
+  );
+}
+
+/* Product card hover */
+.product-card {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 128, 0.12),
+    0 8px 24px rgba(0, 0, 128, 0.08),
+    0 2px 8px rgba(255, 215, 0, 0.06);
+}
+
+/* Light beam animation */
+@keyframes beam-sweep {
+  0% { transform: translateX(-100%) rotate(-45deg); }
+  100% { transform: translateX(300%) rotate(-45deg); }
+}
+
+.light-beam {
+  animation: beam-sweep 8s ease-in-out infinite;
+}
+
+/* Reveal animations (managed by GSAP but also CSS fallback) */
+.reveal-up {
+  opacity: 0;
+  transform: translateY(40px);
+}
+.reveal-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+/* Category badge */
+.category-badge {
+  background: linear-gradient(135deg, rgba(0,0,128,0.08), rgba(0,0,128,0.03));
+  border: 1px solid rgba(0,0,128,0.12);
+  transition: all 0.2s ease;
+}
+.category-badge:hover, .category-badge.active {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: white;
+}
+
+/* Gold accent line */
+.gold-line {
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
+
+/* Spec table alternating rows */
+.spec-row:nth-child(even) {
+  background: rgba(0, 0, 128, 0.03);
+}
+
+/* Upload zone */
+.upload-zone {
+  border: 2px dashed rgba(0, 0, 128, 0.25);
+  transition: all 0.3s ease;
+}
+.upload-zone:hover, .upload-zone.dragover {
+  border-color: var(--gold);
+  background: rgba(255, 215, 0, 0.05);
+}
+
+/* Particle canvas */
+#particle-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}

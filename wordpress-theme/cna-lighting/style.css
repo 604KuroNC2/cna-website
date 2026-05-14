@@ -1,0 +1,29 @@
+/*
+Theme Name: CNA Lighting
+Theme URI: https://www.cnalighting.com
+Author: CNA International Enterprises Inc.
+Author URI: https://www.cnalighting.com
+Description: Official CNA Lighting theme with WooCommerce product catalog, AJAX filtering, and CSV import.
+Version: 1.0.0
+Requires at least: 6.0
+Tested up to: 6.7
+Requires PHP: 8.0
+WC requires at least: 8.0
+WC tested up to: 9.0
+License: Proprietary
+Text Domain: cna-lighting
+*/
+
+/* CSS variables — all brand colours defined once */
+:root {
+  --cna-navy:      #000080;
+  --cna-dark-navy: #000060;
+  --cna-darkest:   #00002a;
+  --cna-gold:      #FFD700;
+  --cna-gold-lt:   #FFE44D;
+  --cna-bg:        #f8f8fc;
+  --cna-bg-alt:    #eef0f8;
+  --cna-text:      #374151;
+  --cna-muted:     #6b7280;
+  --cna-border:    #e5e7eb;
+}
