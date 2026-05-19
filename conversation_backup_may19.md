@@ -27,7 +27,7 @@ The admin access panel at `/admin` is now secured using Google Authenticator (TO
 2. Open **Google Authenticator** on your smartphone.
 3. Tap the **`+`** icon and select **Scan a QR code**.
 4. Scan the secure QR code presented on the screen.
-5. *(Optional)* If the QR code doesn't load, manually type in your secure secret key: `CVLODU7UVO32G2JBDF63AD4KWZUYBADN`.
+5. *(Optional)* If the QR code doesn't load, manually type in your secure secret key. *(You can find this secret key securely in your local `.env.local` file under `ADMIN_TOTP_SECRET`)*.
 6. Head to **`https://www.cnalighting.com/admin/login`** and enter your 6-digit verification code to access the admin portal.
 
 ---
@@ -56,8 +56,8 @@ If you ever need to recreate or re-import the project in Vercel, make sure the f
 
 | Variable Name | Value | Purpose |
 | :--- | :--- | :--- |
-| `ADMIN_TOTP_SECRET` | `CVLODU7UVO32G2JBDF63AD4KWZUYBADN` | Secret key for generating Authenticator codes. |
-| `ADMIN_SESSION_SECRET` | `zehfyz-Xogbaw-9bycqa` | Encrypts secure session cookies for logged-in admins. |
+| `ADMIN_TOTP_SECRET` | *[REDACTED_FOR_SECURITY]* | Secret key for generating Authenticator codes. *(Ensure this matches your local `.env.local`)* |
+| `ADMIN_SESSION_SECRET` | *[REDACTED_FOR_SECURITY]* | Encrypts secure session cookies for logged-in admins. |
 | `PUPPETEER_SKIP_DOWNLOAD` | `true` | Tells the Vercel installer to bypass loading the full Chrome browser package. |
 
 ---
