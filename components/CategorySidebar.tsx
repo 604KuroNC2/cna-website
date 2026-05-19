@@ -71,7 +71,6 @@ export default function CategorySidebar({
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => {
           setExpandedMain(null);
-          setExpandedSub(null);
           onClearAll();
         }}
         className={`w-full text-left px-3 py-2 rounded-sm text-sm font-medium mb-2 transition-colors ${

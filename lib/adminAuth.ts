@@ -1,4 +1,4 @@
-// Admin authentication utilities — uses Web Crypto API (no external deps)
+// Admin authentication utilities — uses Web Crypto API + otplib for TOTP
 
 const SESSION_COOKIE = "cna_admin_session";
 const SESSION_TTL_MS = 8 * 60 * 60 * 1000; // 8 hours
@@ -28,16 +28,15 @@ function safeEqual(a: string, b: string): boolean {
   return result === 0;
 }
 
-export async function verifyPassword(entered: string): Promise<boolean> {
-  const expected = process.env.ADMIN_PASSWORD;
-  if (!expected) return false;
-  // Hash both sides so the env var isn't exposed in timing
-  const secret = process.env.ADMIN_SESSION_SECRET ?? "fallback";
-  const [h1, h2] = await Promise.all([
-    hmacSha256(secret, entered),
-    hmacSha256(secret, expected),
-  ]);
-  return safeEqual(h1, h2);
+export async function verifyTOTP(code: string): Promise<boolean> {
+  const secret = process.env.ADMIN_TOTP_SECRET;
+  if (!secret) return false;
+  try {
+    const { verifySync } = await import("otplib");
+    return verifySync({ token: code.replace(/\s/g, ""), secret }).valid;
+  } catch {
+    return false;
+  }
 }
 
 export async function createSessionToken(): Promise<string> {

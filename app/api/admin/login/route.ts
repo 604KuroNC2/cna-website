@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyPassword, createSessionToken, SESSION_COOKIE } from "@/lib/adminAuth";
+import { verifyTOTP, createSessionToken, SESSION_COOKIE } from "@/lib/adminAuth";
 
 // Brute-force rate limiting (in-memory, resets on restart)
 const attempts = new Map<string, { count: number; resetAt: number }>();
@@ -41,23 +41,22 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  let body: { password?: string };
+  let body: { code?: string };
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 
-  const password = typeof body.password === "string" ? body.password.slice(0, 128) : "";
-  if (!password) {
-    return NextResponse.json({ error: "Password required" }, { status: 400 });
+  const code = typeof body.code === "string" ? body.code.replace(/\s/g, "").slice(0, 6) : "";
+  if (!code || code.length !== 6 || !/^\d{6}$/.test(code)) {
+    return NextResponse.json({ error: "Enter the 6-digit code from your authenticator app." }, { status: 400 });
   }
 
-  const valid = await verifyPassword(password);
+  const valid = await verifyTOTP(code);
   if (!valid) {
-    // Uniform delay to make timing attacks harder
     await new Promise((r) => setTimeout(r, 300));
-    return NextResponse.json({ error: "Invalid password" }, { status: 401 });
+    return NextResponse.json({ error: "Invalid code. Make sure your device time is correct." }, { status: 401 });
   }
 
   const token = await createSessionToken();

@@ -8,7 +8,7 @@ import { Suspense } from "react";
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [password, setPassword] = useState("");
+  const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -22,7 +22,7 @@ function LoginForm() {
       const res = await fetch("/api/admin/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ code }),
         credentials: "same-origin",
       });
 
@@ -32,8 +32,8 @@ function LoginForm() {
         router.refresh();
       } else {
         const data = await res.json().catch(() => ({}));
-        setError(data.error || "Login failed. Check your password.");
-        setPassword("");
+        setError(data.error || "Invalid code. Please try again.");
+        setCode("");
         inputRef.current?.focus();
       }
     } catch {
@@ -41,6 +41,12 @@ function LoginForm() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.replace(/\D/g, "").slice(0, 6);
+    setCode(val);
+    setError("");
   };
 
   return (
@@ -70,27 +76,29 @@ function LoginForm() {
             <h1 className="font-display font-black text-2xl text-[#000080] tracking-tight mb-1">
               Admin Access
             </h1>
-            <p className="text-gray-400 text-sm">Enter your admin password to continue.</p>
+            <p className="text-gray-400 text-sm">Enter the 6-digit code from Google Authenticator.</p>
           </div>
 
           <form onSubmit={handleSubmit} noValidate>
             <div className="mb-4">
-              <label htmlFor="password" className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">
-                Password
+              <label htmlFor="code" className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">
+                Authenticator Code
               </label>
               <input
                 ref={inputRef}
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete="current-password"
+                id="code"
+                type="text"
+                inputMode="numeric"
+                value={code}
+                onChange={handleCodeChange}
+                autoComplete="one-time-code"
                 autoFocus
                 required
-                maxLength={128}
-                className="w-full px-4 py-3 border border-gray-200 rounded-sm text-sm focus:outline-none focus:border-[#000080] focus:ring-1 focus:ring-[#000080] transition-all"
-                placeholder="••••••••"
+                maxLength={6}
+                className="w-full px-4 py-3 border border-gray-200 rounded-sm text-2xl font-mono tracking-[0.5em] text-center focus:outline-none focus:border-[#000080] focus:ring-1 focus:ring-[#000080] transition-all"
+                placeholder="000000"
               />
+              <p className="text-xs text-gray-400 mt-1.5 text-center">Refreshes every 30 seconds</p>
             </div>
 
             {error && (
@@ -104,7 +112,7 @@ function LoginForm() {
 
             <button
               type="submit"
-              disabled={loading || !password}
+              disabled={loading || code.length !== 6}
               className="w-full py-3 bg-[#000080] text-white font-bold text-sm uppercase tracking-wide rounded-sm hover:bg-[#0000a0] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-[0_4px_20px_rgba(0,0,128,0.4)]"
             >
               {loading ? (
