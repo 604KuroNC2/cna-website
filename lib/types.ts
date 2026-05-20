@@ -6,7 +6,6 @@ export interface Product {
   menu_order: string;
   Model: string;
   SKU: string;
-  Price: string;
   post_title: string;
   post_content: string;
   image: string;

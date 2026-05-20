@@ -95,18 +95,8 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
             </div>
           )}
 
-          {/* Price + CTA row */}
-          <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-            <div>
-              {product.Price && (
-                <>
-                  <span className="text-[10px] text-gray-400 uppercase tracking-wide">From</span>
-                  <div className="font-display font-bold text-xl text-[#000080]">
-                    {product.Price}
-                  </div>
-                </>
-              )}
-            </div>
+          {/* CTA row */}
+          <div className="flex items-center justify-end pt-3 border-t border-gray-100">
             <div className="flex items-center gap-2">
               {product.specSheetLink && (
                 <a

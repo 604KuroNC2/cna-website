@@ -45,15 +45,15 @@ export default function ProductDetailPage() {
   const findProduct = useCallback(async () => {
     try {
       // Check cache first
-      const cached = localStorage.getItem("cna_products_cache");
+      const cached = localStorage.getItem("cna_products_cache_v3");
       let csvText = cached;
 
       if (!csvText) {
         const res = await fetch("/data/products.csv");
         if (!res.ok) throw new Error("CSV not found");
         csvText = await res.text();
-        localStorage.setItem("cna_products_cache", csvText);
-        localStorage.setItem("cna_products_cache_time", Date.now().toString());
+        localStorage.setItem("cna_products_cache_v3", csvText);
+        localStorage.setItem("cna_products_cache_time_v3", Date.now().toString());
       }
 
       const products = await parseProductsFromCSV(csvText!);
@@ -216,14 +216,6 @@ export default function ProductDetailPage() {
               <p className="text-gray-500 text-sm mb-4">Model: {product.Model}</p>
             )}
 
-            {/* Price */}
-            {product.Price && (
-              <div className="inline-block px-4 py-2 bg-[#000080] text-white rounded-sm mb-6">
-                <span className="text-xs text-white/60 uppercase tracking-wider block">Price</span>
-                <span className="font-display font-bold text-2xl">{product.Price}</span>
-              </div>
-            )}
-
             {/* Key specs quick view */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
               {[
@@ -351,9 +343,6 @@ export default function ProductDetailPage() {
                   <h4 className="font-display font-semibold text-[#000080] text-sm leading-tight line-clamp-2">
                     {p.post_title}
                   </h4>
-                  {p.Price && (
-                    <p className="text-[#000080] font-bold text-base mt-2">{p.Price}</p>
-                  )}
                 </Link>
               ))}
             </div>

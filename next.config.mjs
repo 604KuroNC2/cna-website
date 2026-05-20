@@ -28,7 +28,7 @@ const securityHeaders = [
       // Styles: Tailwind/GSAP use inline styles extensively
       "style-src 'self' 'unsafe-inline'",
       // Images: product images from CNA WP, Pexels stock photos, placeholder service, blob for uploads
-      "img-src 'self' data: blob: https://www.cnalighting.com https://images.pexels.com https://placehold.co",
+      "img-src 'self' data: blob: https://6dywl8dmjehpqrx0.public.blob.vercel-storage.com https://images.pexels.com https://placehold.co",
       // Fonts: Next.js self-hosts Google Fonts at build time
       "font-src 'self'",
       // Connections: same-origin API routes only
@@ -50,14 +50,21 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "www.cnalighting.com",
-        pathname: "/wp-content/**",
+        hostname: "6dywl8dmjehpqrx0.public.blob.vercel-storage.com",
       },
       {
         protocol: "https",
         hostname: "placehold.co",
       },
     ],
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/files/:path*",
+        destination: "https://6dywl8dmjehpqrx0.public.blob.vercel-storage.com/:path*",
+      },
+    ];
   },
   async headers() {
     return [

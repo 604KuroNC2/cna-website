@@ -3,7 +3,7 @@ import { Product } from "./types";
 
 const CSV_HEADERS = [
   "MainCategory", "SubCategory1", "SubCategory2", "category", "menu_order",
-  "Model", "SKU:sku", "Price: regular_price", "post_title", "post_content",
+  "Model", "SKU:sku", "post_title", "post_content",
   "Images/Gallery", "Spec Sheet", "Spec Sheet Link", "product_type",
   "product_visibility", "Inventory: stock",
   "Wattage (W)", "Voltage (V)", "Lumens (lm)", "Efficiency",
@@ -44,7 +44,6 @@ function normalizeRow(row: Record<string, string>): Product {
     menu_order: (row["menu_order"] || "").trim(),
     Model: (row["Model"] || "").trim(),
     SKU: (row["SKU:sku"] || "").trim(),
-    Price: (row["Price: regular_price"] || "").trim(),
     post_title: (row["post_title"] || "").trim(),
     post_content: (row["post_content"] || "").trim(),
     image: (row["Images/Gallery"] || "").trim(),
