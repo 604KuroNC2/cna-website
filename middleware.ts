@@ -9,9 +9,7 @@ export async function middleware(request: NextRequest) {
     const valid = await verifySessionToken(token);
 
     if (!valid) {
-      const loginUrl = new URL("/login-hide_my_ep3_5964", request.url);
-      loginUrl.searchParams.set("from", pathname);
-      return NextResponse.redirect(loginUrl);
+      return new NextResponse(null, { status: 404 });
     }
   }
 
