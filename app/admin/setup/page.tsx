@@ -92,7 +92,7 @@ export default async function SetupPage() {
           </ol>
 
           <a
-            href="/admin/login"
+            href="/login-hide_my_ep3_5964"
             className="block w-full py-3 bg-[#000080] text-white font-bold text-sm uppercase tracking-wide rounded-sm hover:bg-[#0000a0] transition-all duration-200 text-center"
           >
             Go to Login →

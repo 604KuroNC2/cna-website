@@ -100,7 +100,7 @@ export default function AdminPage() {
 
   const handleLogout = async () => {
     await fetch("/api/admin/logout", { method: "POST", credentials: "same-origin" });
-    router.push("/admin/login");
+    router.push("/login-hide_my_ep3_5964");
   };
 
   useEffect(() => {
