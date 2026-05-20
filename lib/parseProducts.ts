@@ -28,10 +28,13 @@ const CSV_HEADERS = [
   "Classification Type",
 ];
 
+function cleanDegree(val: string): string {
+  return val.trim().replace(/�/g, "°");
+}
+
 function cleanValue(val: string): string {
   return val
     .trim()
-    .replace(/�\s*/g, "≥")  // replacement char → ≥ (from Latin-1 encoded ≥)
     .replace(/\?\s*(?=\d)/g, "≥ "); // literal "?" before digits (corrupted ≥)
 }
 
@@ -57,10 +60,10 @@ function normalizeRow(row: Record<string, string>): Product {
     "Bulb Equivalent": (row["Bulb Equivalent"] || "").trim(),
     Base: (row["Base"] || "").trim(),
     "Colour Temperature": (row["Colour Temperature"] || "").trim(),
-    "Beam Angle": (row["Beam Angle"] || "").trim(),
+    "Beam Angle": cleanDegree(row["Beam Angle"] || ""),
     CRI: cleanValue(row["CRI"] || ""),
     Dimmable: (row["Dimmable"] || "").trim(),
-    "Operating Temperature": cleanValue(row["Operating Temperature"] || ""),
+    "Operating Temperature": cleanDegree(row["Operating Temperature"] || ""),
     "Environmental Rating": (row["Environmental Rating"] || "").trim(),
     Certifications: (row["Certifications"] || "").trim(),
     "2-HR Fire Rating Compliance": (row["2-HR Fire Rating Compliance"] || "").trim(),
