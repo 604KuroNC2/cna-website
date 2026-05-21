@@ -66,7 +66,7 @@ export default function Navbar() {
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between min-h-16 lg:min-h-20 py-2 flex-wrap gap-y-1">
+        <div className="flex items-center min-h-16 lg:min-h-20 py-2 gap-y-1">
           {/* Logo */}
           <div ref={logoRef}>
             <Link href="/" className="flex items-center gap-3">
@@ -83,7 +83,7 @@ export default function Navbar() {
           </div>
 
           {/* Desktop nav */}
-          <div ref={linksRef} className="hidden md:flex flex-wrap items-center gap-0.5 justify-end">
+          <div ref={linksRef} className="hidden md:flex flex-1 flex-wrap items-center gap-0.5 justify-center">
             {categories.map((cat) => (
               <div
                 key={cat.name}
@@ -141,7 +141,7 @@ export default function Navbar() {
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden flex flex-col gap-1.5 p-2"
+            className="md:hidden flex flex-col gap-1.5 p-2 ml-auto"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
