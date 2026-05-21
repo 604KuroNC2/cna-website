@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/lib/types";
+import { toBlobShortUrl } from "@/lib/blobUrl";
 
 interface ProductCardProps {
   product: Product;
@@ -28,7 +29,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
         <div className="relative h-48 sm:h-52 bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
           {product.image ? (
             <img
-              src={product.image}
+              src={toBlobShortUrl(product.image)}
               alt={product.post_title}
               className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105"
               loading={index < 8 ? "eager" : "lazy"}
@@ -100,7 +101,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
             <div className="flex items-center gap-2">
               {product.specSheetLink && (
                 <a
-                  href={product.specSheetLink}
+                  href={toBlobShortUrl(product.specSheetLink)}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}

@@ -24,7 +24,7 @@ const securityHeaders = [
       // Fetch directives
       "default-src 'self'",
       // Scripts: Next.js requires unsafe-eval in dev for HMR; unsafe-inline for inline scripts
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com https://www.gstatic.com",
       // Styles: Tailwind/GSAP use inline styles extensively
       "style-src 'self' 'unsafe-inline'",
       // Images: product images from CNA WP, Pexels stock photos, placeholder service, blob for uploads
@@ -32,7 +32,7 @@ const securityHeaders = [
       // Fonts: Next.js self-hosts Google Fonts at build time
       "font-src 'self'",
       // Connections: same-origin API routes only
-      "connect-src 'self'",
+      "connect-src 'self' https://www.google.com",
       // Block all plugin content (Flash, Java applets)
       "object-src 'none'",
       // Block <base> tag hijacking
@@ -40,6 +40,7 @@ const securityHeaders = [
       // Block form submissions to external URLs
       "form-action 'self'",
       // Block framing from any origin
+      "frame-src 'self' https://www.google.com",
       "frame-ancestors 'none'",
     ].join("; "),
   },
@@ -61,7 +62,7 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: "/files/:path*",
+        source: "/file/:path*",
         destination: "https://6dywl8dmjehpqrx0.public.blob.vercel-storage.com/:path*",
       },
     ];

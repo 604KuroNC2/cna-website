@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import { parseProductsFromCSV } from "@/lib/parseProducts";
 import { getProductSpecs, groupSpecsByCategory, getVisibleSpecs } from "@/lib/specConfig";
 import { Product, SpecConfig } from "@/lib/types";
+import { toBlobShortUrl } from "@/lib/blobUrl";
 
 const GROUP_ORDER = ["Performance", "Ratings", "Dimensions", "Physical", "General", "Technical"];
 const GROUP_ICONS: Record<string, string> = {
@@ -178,7 +179,7 @@ export default function ProductDetailPage() {
           <div ref={imageRef} className="bg-white rounded-sm border border-gray-100 p-8 flex items-center justify-center min-h-[360px] relative group">
             {product.image && !imgError ? (
               <img
-                src={product.image}
+                src={toBlobShortUrl(product.image)}
                 alt={product.post_title}
                 className="max-h-80 max-w-full object-contain"
                 onError={() => setImgError(true)}
@@ -239,7 +240,7 @@ export default function ProductDetailPage() {
             <div className="flex flex-wrap gap-3 mb-6">
               {product.specSheetLink && (
                 <a
-                  href={product.specSheetLink}
+                  href={toBlobShortUrl(product.specSheetLink)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-6 py-3 bg-[#FFD700] text-[#000080] font-bold text-sm uppercase tracking-wide rounded-sm hover:bg-[#FFE44D] transition-all duration-200 hover:shadow-[0_4px_20px_rgba(255,215,0,0.4)]"
@@ -332,7 +333,7 @@ export default function ProductDetailPage() {
                   {p.image && (
                     <div className="h-32 flex items-center justify-center mb-3">
                       <img
-                        src={p.image}
+                        src={toBlobShortUrl(p.image)}
                         alt={p.post_title}
                         className="max-h-full object-contain group-hover:scale-105 transition-transform duration-300"
                         onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
