@@ -16,8 +16,14 @@ async function main() {
   // Build lookup map: "YYYY/MM/filename.ext" → blob URL
   const blobResults = JSON.parse(await readFile(BLOB_RESULTS_PATH, 'utf8'));
   const blobMap = new Map();
+  const blobMapByBasename = new Map();
   for (const { file, url } of blobResults) {
-    if (url) blobMap.set(file, url);
+    if (url) {
+      blobMap.set(file, url);
+      // Also index by just the filename for flat uploads (no year/month folder)
+      const basename = file.split('/').pop();
+      blobMapByBasename.set(basename, url);
+    }
   }
   console.log(`Loaded ${blobMap.size} blob URL mappings.`);
 
@@ -48,8 +54,12 @@ async function main() {
 
     // Replace all occurrences of /files/YYYY/MM/... paths in this line
     return line.replace(/\/files\/(\d{4}\/\d{2}\/[^\s,"]+)/g, (match, relativePath) => {
-      // Try both the raw path and URL-decoded version (e.g. %2B → +)
-      const blobUrl = blobMap.get(relativePath) ?? blobMap.get(decodeURIComponent(relativePath));
+      // Try full path, URL-decoded path, then just the filename
+      const basename = relativePath.split('/').pop();
+      const blobUrl = blobMap.get(relativePath)
+        ?? blobMap.get(decodeURIComponent(relativePath))
+        ?? blobMapByBasename.get(basename)
+        ?? blobMapByBasename.get(decodeURIComponent(basename));
       if (blobUrl) {
         // Determine if this looks like a spec sheet or image for counting
         if (relativePath.endsWith('.pdf') || relativePath.toLowerCase().includes('spec')) {
