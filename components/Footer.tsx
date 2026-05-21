@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import ContactModal from "@/components/ContactModal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -117,12 +118,7 @@ export default function Footer() {
                 <span>Canada</span>
               </div>
               <div className="flex items-start gap-3">
-                <svg className="w-4 h-4 mt-0.5 text-[#FFD700] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                <a href="mailto:info@cnalighting.com" className="hover:text-[#FFD700] transition-colors">
-                  info@cnalighting.com
-                </a>
+                <ContactModal />
               </div>
               <div className="flex items-start gap-3">
                 <svg className="w-4 h-4 mt-0.5 text-[#FFD700] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
