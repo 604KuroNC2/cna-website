@@ -7,7 +7,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
-import CategorySidebar from "@/components/CategorySidebar";
 import { parseProductsFromCSV, buildCategoryTree, filterProducts, getUniqueCCTs } from "@/lib/parseProducts";
 import { Product, CategoryTree } from "@/lib/types";
 import { toSlug } from "@/lib/slugs";
@@ -330,69 +329,57 @@ function ProductsContent({ mainSlug, sub1Slug }: ProductsPageContentProps) {
 
       {/* Main content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar */}
-          <div className="lg:w-60 xl:w-64 flex-shrink-0">
-            <div className="sticky top-24">
-              {!loading && (
-                <CategorySidebar
-                  categories={categories}
-                  filters={filters}
-                  onFilterChange={handleFilterChange}
-                  onClearAll={handleClearAll}
-                  totalCount={products.length}
-                  filteredCount={filtered.length}
-                />
-              )}
-
-              {activeFiltersCount > 0 && (
-                <button
-                  onClick={handleClearAll}
-                  className="mt-4 w-full text-center text-xs text-[#000080] hover:text-[#0000c0] font-medium py-2 border border-[#000080]/20 rounded-sm hover:border-[#000080]/40 transition-all"
-                >
-                  Clear all filters ({activeFiltersCount})
-                </button>
-              )}
-            </div>
-          </div>
-
+        <div>
           {/* Product grid */}
-          <div className="flex-1 min-w-0">
-            {/* Breadcrumb */}
-            {(filters.mainCategory || filters.subCategory1 || filters.subCategory2) && (
-              <div className="flex items-center gap-2 mb-4 text-xs text-gray-500">
-                <button onMouseDown={(e) => e.preventDefault()} onClick={handleClearAll} className="hover:text-[#000080]">
-                  All
-                </button>
-                {filters.mainCategory && (
-                  <>
-                    <span className="text-gray-300">/</span>
-                    <button
-                      onMouseDown={(e) => e.preventDefault()}
-                      onClick={() => handleFilterChange({ subCategory1: "", subCategory2: "" })}
-                      className="hover:text-[#000080]"
-                    >
-                      {filters.mainCategory}
-                    </button>
-                  </>
-                )}
-                {filters.subCategory1 && (
-                  <>
-                    <span className="text-gray-300">/</span>
-                    <button
-                      onMouseDown={(e) => e.preventDefault()}
-                      onClick={() => handleFilterChange({ subCategory2: "" })}
-                      className="hover:text-[#000080]"
-                    >
-                      {filters.subCategory1}
-                    </button>
-                  </>
-                )}
-                {filters.subCategory2 && (
-                  <>
-                    <span className="text-gray-300">/</span>
-                    <span className="text-[#000080] font-medium">{filters.subCategory2}</span>
-                  </>
+          <div className="w-full">
+            {/* Breadcrumb + clear filters */}
+            {(filters.mainCategory || filters.subCategory1 || filters.subCategory2 || activeFiltersCount > 0) && (
+              <div className="flex items-center justify-between gap-2 mb-4 flex-wrap">
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <button onMouseDown={(e) => e.preventDefault()} onClick={handleClearAll} className="hover:text-[#000080]">
+                    All
+                  </button>
+                  {filters.mainCategory && (
+                    <>
+                      <span className="text-gray-300">/</span>
+                      <button
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => handleFilterChange({ subCategory1: "", subCategory2: "" })}
+                        className="hover:text-[#000080]"
+                      >
+                        {filters.mainCategory}
+                      </button>
+                    </>
+                  )}
+                  {filters.subCategory1 && (
+                    <>
+                      <span className="text-gray-300">/</span>
+                      <button
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => handleFilterChange({ subCategory2: "" })}
+                        className="hover:text-[#000080]"
+                      >
+                        {filters.subCategory1}
+                      </button>
+                    </>
+                  )}
+                  {filters.subCategory2 && (
+                    <>
+                      <span className="text-gray-300">/</span>
+                      <span className="text-[#000080] font-medium">{filters.subCategory2}</span>
+                    </>
+                  )}
+                </div>
+                {activeFiltersCount > 0 && (
+                  <button
+                    onClick={handleClearAll}
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-[#000080] border border-[#000080]/20 rounded-sm hover:border-[#000080]/40 hover:bg-[#000080]/5 transition-all font-medium"
+                  >
+                    Clear filters ({activeFiltersCount})
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
                 )}
               </div>
             )}
