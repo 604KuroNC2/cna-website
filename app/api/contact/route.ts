@@ -4,7 +4,7 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY);
 const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET_KEY!;
 const TO_EMAIL = "orders@cnalighting.com";
-const FROM_EMAIL = "CNA Lighting Website <noreply@cnalighting.com>";
+const FROM_EMAIL = "CNA Lighting Website <noreply@webinquiry.cnalighting.com>";
 
 async function verifyRecaptcha(token: string): Promise<boolean> {
   const res = await fetch("https://www.google.com/recaptcha/api/siteverify", {
