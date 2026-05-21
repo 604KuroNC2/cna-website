@@ -42,6 +42,8 @@ function ProductsContent({ mainSlug, sub1Slug }: ProductsPageContentProps) {
   const gridRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const lastAnimatedCountRef = useRef(0);
 
   // Detect initial view mode from screen width
   useEffect(() => {
@@ -141,16 +143,41 @@ function ProductsContent({ mainSlug, sub1Slug }: ProductsPageContentProps) {
     setPage(1);
   }, [products, filters, search]);
 
-  // GSAP card animations
+  // GSAP card animations — only animate newly added cards
   useEffect(() => {
     if (!gridRef.current || loading) return;
-    const cards = gridRef.current.querySelectorAll(".product-card-wrap");
+    const cards = Array.from(gridRef.current.querySelectorAll<HTMLDivElement>(".product-card-wrap"));
+    // When filter/search resets page to 1, reset animation counter
+    if (page === 1) lastAnimatedCountRef.current = 0;
+    const newCards = cards.slice(lastAnimatedCountRef.current);
+    if (newCards.length === 0) return;
     gsap.fromTo(
-      cards,
+      newCards,
       { opacity: 0, y: 30 },
       { opacity: 1, y: 0, stagger: 0.04, duration: 0.5, ease: "power3.out", clearProps: "all" }
     );
+    lastAnimatedCountRef.current = cards.length;
   }, [filtered, page, loading]);
+
+  const paged = filtered.slice(0, page * PAGE_SIZE);
+  const hasMore = paged.length < filtered.length;
+
+  // Infinite scroll — load next page when sentinel enters viewport
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel || !hasMore) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          observer.disconnect(); // prevent double-firing before next render
+          setPage((p) => p + 1);
+        }
+      },
+      { rootMargin: "300px" }
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [hasMore, paged.length]);
 
   // Page header entrance
   useEffect(() => {
@@ -181,9 +208,6 @@ function ProductsContent({ mainSlug, sub1Slug }: ProductsPageContentProps) {
       setFilters({ mainCategory: "", subCategory1: "", subCategory2: "", cct: "" });
     }
   };
-
-  const paged = filtered.slice(0, page * PAGE_SIZE);
-  const hasMore = paged.length < filtered.length;
 
   const activeFiltersCount = [
     filters.mainCategory,
@@ -418,22 +442,16 @@ function ProductsContent({ mainSlug, sub1Slug }: ProductsPageContentProps) {
                   ))}
                 </div>
 
+                {/* Infinite scroll sentinel */}
+                <div ref={sentinelRef} className="h-4 mt-6" />
                 {hasMore && (
-                  <div className="mt-10 text-center">
-                    <button
-                      onClick={() => setPage((p) => p + 1)}
-                      className="px-10 py-4 bg-[#000080] text-white font-bold text-sm uppercase tracking-wide rounded-sm hover:bg-[#0000a0] transition-all duration-200 hover:shadow-[0_8px_30px_rgba(0,0,128,0.3)]"
-                    >
-                      Load More
-                      <span className="ml-2 text-white/60">
-                        ({filtered.length - paged.length} remaining)
-                      </span>
-                    </button>
+                  <div className="flex justify-center py-4">
+                    <div className="w-7 h-7 border-2 border-[#000080]/30 border-t-[#000080] rounded-full animate-spin" />
                   </div>
                 )}
 
-                <p className="text-center text-xs text-gray-400 mt-6">
-                  Showing {paged.length} of {filtered.length} products
+                <p className="text-center text-xs text-gray-400 mt-2 pb-2">
+                  {filtered.length} products
                 </p>
               </>
             )}

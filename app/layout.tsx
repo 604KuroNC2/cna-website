@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
-import { Barlow_Condensed, DM_Sans } from "next/font/google";
+import { Barlow_Condensed, DM_Sans, Roboto } from "next/font/google";
 import "./globals.css";
+import dynamic from "next/dynamic";
+
+const CustomScrollbar = dynamic(() => import("@/components/CustomScrollbar"), { ssr: false });
 
 const barlowCondensed = Barlow_Condensed({
   subsets: ["latin"],
@@ -14,6 +17,13 @@ const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
   variable: "--font-dm-sans",
+  display: "swap",
+});
+
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["700"],
+  variable: "--font-roboto",
   display: "swap",
 });
 
@@ -32,8 +42,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${barlowCondensed.variable} ${dmSans.variable}`}>
-      <body>{children}</body>
+    <html lang="en" className={`${barlowCondensed.variable} ${dmSans.variable} ${roboto.variable}`}>
+      <body>
+        {children}
+        <CustomScrollbar />
+      </body>
     </html>
   );
 }
