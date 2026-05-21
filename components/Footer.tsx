@@ -58,15 +58,15 @@ export default function Footer() {
 
           {/* CNA col */}
           <div>
-            <h4 className="text-white text-lg uppercase tracking-wide mb-3" style={{ fontFamily: "var(--font-roboto, 'Roboto', sans-serif)", fontWeight: 600 }}>
+            <h4 className="text-white text-lg uppercase tracking-wide mb-3" style={{ fontFamily: "var(--font-roboto, 'Roboto', sans-serif)", fontWeight: 500, fontStyle: "italic" }}>
               CNA
             </h4>
             <ul className="space-y-2">
               {[
                 { label: "Dimmer Compatibility", href: "/dimmer-compatibility" },
                 { label: "Freight Prepaid Policy", href: "/freight-prepaid-policy" },
-                { label: "FAQ", href: "/faq" },
                 { label: "Company History", href: "/company-history" },
+                { label: "FAQ", href: "/faq" },
               ].map((item) => (
                 <li key={item.label}>
                   <Link
@@ -82,7 +82,7 @@ export default function Footer() {
 
           {/* Support col */}
           <div>
-            <h4 className="text-white text-lg uppercase tracking-wide mb-3" style={{ fontFamily: "var(--font-roboto, 'Roboto', sans-serif)", fontWeight: 600 }}>
+            <h4 className="text-white text-lg uppercase tracking-wide mb-3" style={{ fontFamily: "var(--font-roboto, 'Roboto', sans-serif)", fontWeight: 500, fontStyle: "italic" }}>
               Support
             </h4>
             <ul className="space-y-2">
@@ -104,7 +104,7 @@ export default function Footer() {
 
           {/* Contact col */}
           <div>
-            <h4 className="text-white text-lg uppercase tracking-wide mb-3" style={{ fontFamily: "var(--font-roboto, 'Roboto', sans-serif)", fontWeight: 600 }}>
+            <h4 className="text-white text-lg uppercase tracking-wide mb-3" style={{ fontFamily: "var(--font-roboto, 'Roboto', sans-serif)", fontWeight: 500, fontStyle: "italic" }}>
               Contact
             </h4>
             <div className="space-y-2.5 text-sm text-white/50">
