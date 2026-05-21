@@ -17,16 +17,16 @@ async function verifyRecaptcha(token: string): Promise<boolean> {
 }
 
 export async function POST(req: NextRequest) {
-  let body: { name?: string; company?: string; subject?: string; message?: string; token?: string };
+  let body: { name?: string; company?: string; email?: string; subject?: string; message?: string; token?: string };
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const { name, company, subject, message, token } = body;
+  const { name, company, email, subject, message, token } = body;
 
-  if (!name?.trim() || !subject?.trim() || !message?.trim() || !token?.trim()) {
+  if (!name?.trim() || !email?.trim() || !subject?.trim() || !message?.trim() || !token?.trim()) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
@@ -38,9 +38,11 @@ export async function POST(req: NextRequest) {
   const { error } = await resend.emails.send({
     from: FROM_EMAIL,
     to: TO_EMAIL,
+    replyTo: email,
     subject: `Website Contact: ${subject}`,
     text: [
       `Name: ${name}`,
+      `Email: ${email}`,
       company ? `Company: ${company}` : "",
       `Subject: ${subject}`,
       "",

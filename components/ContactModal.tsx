@@ -33,6 +33,7 @@ async function getRecaptchaToken(action: string): Promise<string> {
 interface FormState {
   name: string;
   company: string;
+  email: string;
   subject: string;
   message: string;
 }
@@ -40,7 +41,7 @@ interface FormState {
 export default function ContactModal() {
   const [eligible, setEligible] = useState<boolean | null>(null);
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState<FormState>({ name: "", company: "", subject: "", message: "" });
+  const [form, setForm] = useState<FormState>({ name: "", company: "", email: "", subject: "", message: "" });
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -84,7 +85,7 @@ export default function ContactModal() {
     setOpen(false);
     setStatus("idle");
     setErrorMsg("");
-    setForm({ name: "", company: "", subject: "", message: "" });
+    setForm({ name: "", company: "", email: "", subject: "", message: "" });
   };
 
   if (eligible === null || eligible === false) return null;
@@ -182,6 +183,19 @@ export default function ContactModal() {
                         style={{ background: "rgba(255,255,255,0.06)" }}
                       />
                     </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-white/60 text-xs uppercase tracking-widest mb-1.5">Email *</label>
+                    <input
+                      type="email"
+                      required
+                      value={form.email}
+                      onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                      className="w-full px-3 py-2.5 border border-white/15 text-white text-sm rounded-sm focus:outline-none focus:border-[#FFD700] transition-colors placeholder-white/25"
+                      placeholder="your@email.com"
+                      style={{ background: "rgba(255,255,255,0.06)" }}
+                    />
                   </div>
 
                   <div>
