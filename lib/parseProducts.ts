@@ -28,16 +28,6 @@ const CSV_HEADERS = [
   "Classification Type",
 ];
 
-function cleanDegree(val: string): string {
-  return val.trim().replace(/�/g, "°");
-}
-
-function cleanValue(val: string): string {
-  return val
-    .trim()
-    .replace(/\?\s*(?=\d)/g, "≥ "); // literal "?" before digits (corrupted ≥)
-}
-
 function normalizeRow(row: Record<string, string>): Product {
   return {
     MainCategory: (row["MainCategory"] || "").trim(),
@@ -60,10 +50,10 @@ function normalizeRow(row: Record<string, string>): Product {
     "Bulb Equivalent": (row["Bulb Equivalent"] || "").trim(),
     Base: (row["Base"] || "").trim(),
     "Colour Temperature": (row["Colour Temperature"] || "").trim(),
-    "Beam Angle": cleanDegree(row["Beam Angle"] || ""),
-    CRI: cleanValue(row["CRI"] || ""),
+    "Beam Angle": (row["Beam Angle"] || "").trim(),
+    CRI: (row["CRI"] || "").trim(),
     Dimmable: (row["Dimmable"] || "").trim(),
-    "Operating Temperature": cleanDegree(row["Operating Temperature"] || ""),
+    "Operating Temperature": (row["Operating Temperature"] || "").trim(),
     "Environmental Rating": (row["Environmental Rating"] || "").trim(),
     Certifications: (row["Certifications"] || "").trim(),
     "2-HR Fire Rating Compliance": (row["2-HR Fire Rating Compliance"] || "").trim(),
@@ -117,8 +107,10 @@ function normalizeRow(row: Record<string, string>): Product {
 }
 
 export async function parseProductsFromCSV(csvText: string): Promise<Product[]> {
+  // Strip UTF-8 BOM if present
+  const text = csvText.charCodeAt(0) === 0xFEFF ? csvText.slice(1) : csvText;
   return new Promise((resolve, reject) => {
-    Papa.parse<Record<string, string>>(csvText, {
+    Papa.parse<Record<string, string>>(text, {
       header: true,
       skipEmptyLines: true,
       transformHeader: (header) => header.trim(),

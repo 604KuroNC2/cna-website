@@ -187,14 +187,14 @@ export default function AdminPage() {
       if (nameLower.endsWith(".csv")) {
         const text = await file.text();
         const parsed = await parseProductsFromCSV(text);
-        localStorage.setItem("cna_products_cache_v4", text);
-        localStorage.setItem("cna_products_cache_time_v4", Date.now().toString());
+        localStorage.setItem("cna_products_cache_v5", text);
+        localStorage.setItem("cna_products_cache_time_v5", Date.now().toString());
         setUploadSuccess(true);
         setTimeout(() => { setUploadSuccess(false); setShowUpload(false); }, 2500);
         void parsed;
       } else if (nameLower.endsWith(".xlsx") || nameLower.endsWith(".xls")) {
         const parsed = await parseProductsFromXLSX(file);
-        localStorage.setItem("cna_products_cache_time_v4", "0");
+        localStorage.setItem("cna_products_cache_time_v5", "0");
         setUploadSuccess(true);
         setTimeout(() => { setUploadSuccess(false); setShowUpload(false); }, 2500);
         void parsed;

@@ -46,15 +46,15 @@ export default function ProductDetailPage() {
   const findProduct = useCallback(async () => {
     try {
       // Check cache first
-      const cached = localStorage.getItem("cna_products_cache_v4");
+      const cached = localStorage.getItem("cna_products_cache_v5");
       let csvText = cached;
 
       if (!csvText) {
         const res = await fetch("/data/products.csv");
         if (!res.ok) throw new Error("CSV not found");
         csvText = await res.text();
-        localStorage.setItem("cna_products_cache_v4", csvText);
-        localStorage.setItem("cna_products_cache_time_v4", Date.now().toString());
+        localStorage.setItem("cna_products_cache_v5", csvText);
+        localStorage.setItem("cna_products_cache_time_v5", Date.now().toString());
       }
 
       const products = await parseProductsFromCSV(csvText!);
