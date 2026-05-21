@@ -254,12 +254,10 @@ export default function Hero() {
         </div>
 
         {/* Stats bar */}
-        <div className="mt-20 pt-12 border-t border-white/10 grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="mt-20 pt-12 border-t border-white/10 grid grid-cols-2 gap-8 max-w-sm">
           {[
             { value: "500+", label: "LED Products" },
             { value: `${Math.floor((Date.now() - new Date("1988-03-01").getTime()) / (365.25 * 24 * 60 * 60 * 1000))}+`, label: "Years Experience" },
-            { value: "cUL / cETLus / cTUVus", label: "Certified" },
-            { value: "2–5yr", label: "Warranty" },
           ].map((stat) => (
             <div key={stat.label} className="text-center md:text-left">
               <div className="font-display font-black text-3xl sm:text-4xl text-[#FFD700] mb-1 leading-tight">
