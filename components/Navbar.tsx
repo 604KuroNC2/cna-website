@@ -1,24 +1,30 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import gsap from "gsap";
-
-const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/products", label: "Products" },
-  { href: "/company-history", label: "About" },
-  { href: "/contact", label: "Contact" },
-];
+import { CategoryTree } from "@/lib/types";
+import { toSlug } from "@/lib/slugs";
 
 export default function Navbar() {
+  const [categories, setCategories] = useState<CategoryTree[]>([]);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [expandedMobile, setExpandedMobile] = useState<string | null>(null);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const navRef = useRef<HTMLElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const linksRef = useRef<HTMLDivElement>(null);
-  const pathname = usePathname();
+  const router = useRouter();
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    fetch("/api/categories")
+      .then((r) => r.json())
+      .then((d) => setCategories(d.categories ?? []))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const logo = logoRef.current;
@@ -29,18 +35,32 @@ export default function Navbar() {
     );
     const anim2 = gsap.fromTo(links,
       { opacity: 0, y: -12 },
-      { opacity: 1, y: 0, stagger: 0.07, duration: 0.5, ease: "power2.out", delay: 0.2, clearProps: "all" }
+      { opacity: 1, y: 0, stagger: 0.05, duration: 0.5, ease: "power2.out", delay: 0.2, clearProps: "all" }
     );
     return () => { anim1.kill(); anim2.kill(); };
+  }, [categories]);
+
+  const handleMouseEnter = useCallback((name: string) => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setActiveDropdown(name);
   }, []);
 
+  const handleMouseLeave = useCallback(() => {
+    closeTimer.current = setTimeout(() => setActiveDropdown(null), 120);
+  }, []);
+
+  const navigateTo = useCallback((path: string) => {
+    setActiveDropdown(null);
+    setMobileOpen(false);
+    router.push(path);
+  }, [router]);
 
   return (
     <nav
       ref={navRef}
       className="fixed top-0 left-0 right-0 z-50 shadow-[0_4px_30px_rgba(0,0,0,0.3)]"
       style={{
-        background: "linear-gradient(135deg, rgba(0,0,42,0.85) 0%, rgba(0,0,96,0.85) 35%, rgba(0,0,128,0.85) 65%, rgba(0,0,160,0.85) 100%)",
+        background: "linear-gradient(135deg, rgba(0,0,42,0.92) 0%, rgba(0,0,96,0.92) 35%, rgba(0,0,128,0.92) 65%, rgba(0,0,160,0.92) 100%)",
         backdropFilter: "blur(14px)",
         WebkitBackdropFilter: "blur(14px)",
       }}
@@ -49,7 +69,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <div ref={logoRef}>
-            <Link href="/" className="flex items-center gap-3 group">
+            <Link href="/" className="flex items-center gap-3">
               <div className="relative h-10 w-32">
                 <Image
                   src="/brand_assets/CNA Logo - White with Alpha Background.png"
@@ -63,83 +83,120 @@ export default function Navbar() {
           </div>
 
           {/* Desktop nav */}
-          <div ref={linksRef} className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`relative px-4 py-2 text-sm font-medium tracking-wide uppercase transition-colors duration-200 group ${
-                  pathname === link.href
-                    ? "text-[#FFD700]"
-                    : "text-white/80 hover:text-white"
-                }`}
+          <div ref={linksRef} className="hidden md:flex items-center gap-0.5">
+            {categories.map((cat) => (
+              <div
+                key={cat.name}
+                className="relative"
+                onMouseEnter={() => handleMouseEnter(cat.name)}
+                onMouseLeave={handleMouseLeave}
               >
-                {link.label}
-                <span
-                  className={`absolute bottom-0 left-4 right-4 h-0.5 bg-[#FFD700] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left ${
-                    pathname === link.href ? "scale-x-100" : ""
-                  }`}
-                />
-              </Link>
-            ))}
+                <button
+                  onClick={() => navigateTo(`/products/${toSlug(cat.name)}`)}
+                  className="relative px-3 py-2 text-xs font-medium tracking-wide uppercase text-white/80 hover:text-white transition-colors duration-200 flex items-center gap-1 group"
+                >
+                  {cat.name}
+                  <svg
+                    className={`w-3 h-3 opacity-50 transition-transform duration-200 ${activeDropdown === cat.name ? "rotate-180" : ""}`}
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                  <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-[#FFD700] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+                </button>
 
-            <Link
-              href="/products"
-              className="ml-4 px-5 py-2.5 bg-[#FFD700] text-[#000080] text-sm font-bold uppercase tracking-wide rounded-sm hover:bg-[#FFE44D] transition-all duration-200 hover:shadow-[0_4px_20px_rgba(255,215,0,0.4)] active:scale-95"
-            >
-              Browse Catalog
-            </Link>
+                {/* Dropdown */}
+                {activeDropdown === cat.name && cat.subcategories.length > 0 && (
+                  <div
+                    className="absolute top-full left-0 pt-1 z-50"
+                    onMouseEnter={() => handleMouseEnter(cat.name)}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    <div
+                      className="min-w-[200px] rounded-sm overflow-hidden"
+                      style={{
+                        background: "linear-gradient(135deg, #00002a 0%, #000060 100%)",
+                        border: "1px solid rgba(255,215,0,0.15)",
+                        boxShadow: "0 16px 48px rgba(0,0,0,0.5)",
+                      }}
+                    >
+                      <div className="h-0.5 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent" />
+                      <div className="py-1.5">
+                        {cat.subcategories.map((sub) => (
+                          <button
+                            key={sub.name}
+                            onClick={() => navigateTo(`/products/${toSlug(cat.name)}/${toSlug(sub.name)}`)}
+                            className="w-full text-left px-4 py-2 text-xs text-white/70 hover:text-[#FFD700] hover:bg-white/5 transition-colors duration-150"
+                          >
+                            {sub.name}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden flex flex-col gap-1.5 p-2 group"
+            className="md:hidden flex flex-col gap-1.5 p-2"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
-            <span
-              className={`block h-0.5 w-6 bg-white transition-all duration-300 ${
-                mobileOpen ? "rotate-45 translate-y-2" : ""
-              }`}
-            />
-            <span
-              className={`block h-0.5 w-6 bg-white transition-all duration-300 ${
-                mobileOpen ? "opacity-0" : ""
-              }`}
-            />
-            <span
-              className={`block h-0.5 w-6 bg-white transition-all duration-300 ${
-                mobileOpen ? "-rotate-45 -translate-y-2" : ""
-              }`}
-            />
+            <span className={`block h-0.5 w-6 bg-white transition-all duration-300 ${mobileOpen ? "rotate-45 translate-y-2" : ""}`} />
+            <span className={`block h-0.5 w-6 bg-white transition-all duration-300 ${mobileOpen ? "opacity-0" : ""}`} />
+            <span className={`block h-0.5 w-6 bg-white transition-all duration-300 ${mobileOpen ? "-rotate-45 -translate-y-2" : ""}`} />
           </button>
         </div>
       </div>
 
       {/* Mobile menu */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-400 ${
-          mobileOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-        } bg-[#000060]/98 backdrop-blur-md`}
+        className={`md:hidden overflow-hidden transition-all duration-300 ${mobileOpen ? "max-h-[80vh] opacity-100" : "max-h-0 opacity-0"} bg-[#000050]/98 backdrop-blur-md overflow-y-auto`}
       >
-        <div className="px-4 py-4 flex flex-col gap-1">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setMobileOpen(false)}
-              className="px-4 py-3 text-white/80 hover:text-white hover:bg-white/10 rounded-sm transition-colors font-medium uppercase tracking-wide text-sm"
-            >
-              {link.label}
-            </Link>
+        <div className="px-4 py-3 flex flex-col gap-0.5">
+          {categories.map((cat) => (
+            <div key={cat.name}>
+              <div className="flex items-center">
+                <button
+                  onClick={() => navigateTo(`/products/${toSlug(cat.name)}`)}
+                  className="flex-1 text-left px-4 py-3 text-white/80 hover:text-white font-medium uppercase tracking-wide text-sm transition-colors"
+                >
+                  {cat.name}
+                </button>
+                {cat.subcategories.length > 0 && (
+                  <button
+                    onClick={() => setExpandedMobile(expandedMobile === cat.name ? null : cat.name)}
+                    className="px-3 py-3 text-white/50 hover:text-[#FFD700] transition-colors"
+                    aria-label={`Expand ${cat.name}`}
+                  >
+                    <svg
+                      className={`w-4 h-4 transition-transform duration-200 ${expandedMobile === cat.name ? "rotate-180" : ""}`}
+                      fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+
+              {expandedMobile === cat.name && (
+                <div className="ml-4 border-l border-white/10 pl-3 pb-1">
+                  {cat.subcategories.map((sub) => (
+                    <button
+                      key={sub.name}
+                      onClick={() => navigateTo(`/products/${toSlug(cat.name)}/${toSlug(sub.name)}`)}
+                      className="w-full text-left px-3 py-2 text-white/60 hover:text-[#FFD700] text-xs uppercase tracking-wide transition-colors"
+                    >
+                      {sub.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
-          <Link
-            href="/products"
-            onClick={() => setMobileOpen(false)}
-            className="mt-2 px-4 py-3 bg-[#FFD700] text-[#000080] font-bold text-sm uppercase tracking-wide text-center rounded-sm"
-          >
-            Browse Catalog
-          </Link>
         </div>
       </div>
     </nav>
