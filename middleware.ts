@@ -4,7 +4,7 @@ import { verifySessionToken, SESSION_COOKIE } from "@/lib/adminAuth";
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith("/admin") && !pathname.startsWith("/admin/setup")) {
+  if (pathname.startsWith("/admin")) {
     const token = request.cookies.get(SESSION_COOKIE)?.value ?? "";
     const valid = await verifySessionToken(token);
 
