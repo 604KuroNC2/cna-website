@@ -35,17 +35,24 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #0d0d1f;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--navy);
-  border-radius: 3px;
+  background: #555577;
+  border-radius: 99px;
+  border: 2px solid #0d0d1f;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--navy-light);
+  background: #7777aa;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #555577 #0d0d1f;
 }
 
 /* Noise texture overlay */
