@@ -9,42 +9,50 @@ gsap.registerPlugin(ScrollTrigger);
 
 const categories = [
   {
-    name: "Filament Bulbs",
-    desc: "Vintage style, modern efficiency. A19, ST19, G25, T30 and more.",
-    slug: "filament-bulbs",
-    image: "https://images.pexels.com/photos/1571463/pexels-photo-1571463.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
+    name: "Bulbs",
+    desc: "A-series, filament, GU10, G9, and specialty bulbs for every residential socket.",
+    slug: "bulbs",
+    image: "https://images.pexels.com/photos/1036936/pexels-photo-1036936.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
   },
   {
-    name: "General Purpose",
-    desc: "Everyday LED A-series bulbs in single pack and multi-pack options.",
-    slug: "general-purpose",
-    image: "https://images.pexels.com/photos/1571468/pexels-photo-1571468.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
-  },
-  {
-    name: "Reflectors & Spotlights",
-    desc: "MR16, GU10, PAR lamps for accent and directional lighting.",
-    slug: "reflectors-spotlights",
-    image: "https://images.pexels.com/photos/2079246/pexels-photo-2079246.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
-  },
-  {
-    name: "Miniature Bulbs",
-    desc: "G4, G9, E11, J-Type specialty bulbs for fixtures and appliances.",
-    slug: "miniature-bulbs",
-    image: "https://images.pexels.com/photos/1123262/pexels-photo-1123262.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
-  },
-  {
-    name: "Downlights",
-    desc: "Recessed LED potlights for residential and commercial ceilings.",
-    slug: "downlights",
+    name: "Recessed Lighting",
+    desc: "Slim and standard LED pot lights built for Canadian residential and commercial ceilings.",
+    slug: "recessed",
     image: "https://images.pexels.com/photos/1080721/pexels-photo-1080721.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
   },
   {
-    name: "Strip Lights",
-    desc: "Flexible LED strips for under-cabinet, cove, and accent lighting.",
-    slug: "strip-lights",
+    name: "Flush Mounts",
+    desc: "Surface-mounted LED ceiling fixtures for kitchens, hallways, and living spaces.",
+    slug: "flush-mounts",
+    image: "https://images.pexels.com/photos/1571463/pexels-photo-1571463.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
+  },
+  {
+    name: "Vanity Lights",
+    desc: "Bathroom bar and mirror lighting with clean, shadow-free illumination.",
+    slug: "vanity-lights",
+    image: "https://images.pexels.com/photos/1457842/pexels-photo-1457842.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
+  },
+  {
+    name: "Under Cabinet",
+    desc: "LED bars and puck lights for kitchen counters, display cases, and task areas.",
+    slug: "under-cabinet",
     image: "https://images.pexels.com/photos/2062431/pexels-photo-2062431.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
   },
+  {
+    name: "Commercial Fixtures",
+    desc: "Industrial-grade LED solutions engineered for retail, warehouse, and office environments.",
+    slug: "commercial-fixtures",
+    filters: ["Commercial Fixtures", "PL & PLC", "Tubes"],
+    image: "https://images.pexels.com/photos/236380/pexels-photo-236380.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
+  },
 ];
+
+const featuredCategory = {
+  name: "Emergency & Exit",
+  desc: "Code-compliant emergency lighting and illuminated exit signs trusted in facilities across Canada.",
+  slug: "emergency-exit",
+  image: "https://images.pexels.com/photos/1078884/pexels-photo-1078884.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
+};
 
 export default function CategoriesShowcase() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -89,7 +97,8 @@ export default function CategoriesShowcase() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* Main 6-category grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
           {categories.map((cat) => (
             <Link
               key={cat.name}
@@ -97,36 +106,40 @@ export default function CategoriesShowcase() {
               className="category-card group relative overflow-hidden rounded-sm border border-gray-100 hover:border-[#000080]/30 transition-all duration-300 hover:shadow-[0_8px_40px_rgba(0,0,128,0.15)]"
               style={{ minHeight: "260px" }}
             >
-              {/* Background image */}
               <img
                 src={cat.image}
                 alt={cat.name}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
               />
-
-              {/* Dark gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#000060]/90 via-[#000080]/50 to-black/20 group-hover:from-[#000080]/95 transition-all duration-300" />
-
-              {/* Gold top accent line */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#000060]/92 via-[#000080]/55 to-black/30 group-hover:from-[#000080]/96 transition-all duration-300" />
               <div className="absolute top-0 left-0 right-0 h-0.5 bg-[#FFD700] scale-x-0 group-hover:scale-x-100 transition-transform duration-400 origin-left" />
 
-              {/* Content */}
               <div className="relative p-7 flex flex-col justify-end h-full" style={{ minHeight: "260px" }}>
                 <div className="mt-auto">
                   <h3 className="font-display font-black text-2xl text-white mb-2 group-hover:text-[#FFD700] transition-colors duration-300 leading-tight">
                     {cat.name}
                   </h3>
-                  <p className="text-white/70 text-sm leading-relaxed mb-4">{cat.desc}</p>
+                  <p className="text-white/70 text-sm leading-relaxed mb-3">{cat.desc}</p>
+
+                  {cat.filters && (
+                    <div className="flex flex-wrap gap-1.5 mb-4">
+                      {cat.filters.map((f) => (
+                        <span
+                          key={f}
+                          className="px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide rounded-sm border border-[#FFD700]/30 text-[#FFD700]/70 bg-[#FFD700]/05"
+                        >
+                          {f}
+                        </span>
+                      ))}
+                    </div>
+                  )}
 
                   <div className="flex items-center gap-2 text-[#FFD700] text-xs font-bold uppercase tracking-widest">
                     Shop Now
                     <svg
                       className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-2"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2.5}
+                      fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
@@ -136,6 +149,40 @@ export default function CategoriesShowcase() {
             </Link>
           ))}
         </div>
+
+        {/* Emergency & Exit — full-width featured card */}
+        <Link
+          href={`/products/${featuredCategory.slug}`}
+          className="category-card group relative overflow-hidden rounded-sm border border-gray-100 hover:border-[#000080]/30 transition-all duration-300 hover:shadow-[0_8px_40px_rgba(0,0,128,0.15)] block"
+          style={{ minHeight: "180px" }}
+        >
+          <img
+            src={featuredCategory.image}
+            alt={featuredCategory.name}
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#000060]/95 via-[#000080]/70 to-black/30 group-hover:from-[#000080]/98 transition-all duration-300" />
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-[#FFD700] scale-x-0 group-hover:scale-x-100 transition-transform duration-400 origin-left" />
+
+          <div className="relative p-7 flex items-center justify-between h-full" style={{ minHeight: "180px" }}>
+            <div>
+              <h3 className="font-display font-black text-2xl text-white mb-2 group-hover:text-[#FFD700] transition-colors duration-300 leading-tight">
+                {featuredCategory.name}
+              </h3>
+              <p className="text-white/70 text-sm leading-relaxed max-w-xl">{featuredCategory.desc}</p>
+            </div>
+            <div className="flex-shrink-0 ml-8 flex items-center gap-2 text-[#FFD700] text-xs font-bold uppercase tracking-widest">
+              Shop Now
+              <svg
+                className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-2"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </div>
+          </div>
+        </Link>
 
         <div className="mt-10 text-center">
           <Link
