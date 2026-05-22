@@ -7,43 +7,45 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const BLOB = "https://6dywl8dmjehpqrx0.public.blob.vercel-storage.com";
+
 const categories = [
   {
     name: "Bulbs",
     desc: "A-series, filament, GU10, G9, and specialty bulbs for every residential socket.",
     slug: "bulbs",
-    image: "https://images.pexels.com/photos/1036936/pexels-photo-1036936.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
+    image: `${BLOB}/2026/05/Bulbs%201.png`,
   },
   {
     name: "Recessed Lighting",
     desc: "Slim and standard LED pot lights built for Canadian residential and commercial ceilings.",
     slug: "recessed",
-    image: "https://images.pexels.com/photos/1080721/pexels-photo-1080721.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
+    image: `${BLOB}/2026/05/Recessed%201.png`,
   },
   {
     name: "Flush Mounts",
     desc: "Surface-mounted LED ceiling fixtures for kitchens, hallways, and living spaces.",
     slug: "flush-mounts",
-    image: "https://images.pexels.com/photos/1571463/pexels-photo-1571463.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
+    image: `${BLOB}/2026/05/Flush%20Mount%201.png`,
   },
   {
     name: "Vanity Lights",
     desc: "Bathroom bar and mirror lighting with clean, shadow-free illumination.",
     slug: "vanity-lights",
-    image: "https://images.pexels.com/photos/1457842/pexels-photo-1457842.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
+    image: `${BLOB}/2026/05/Vanity%201.png`,
   },
   {
     name: "Under Cabinet",
     desc: "LED bars and puck lights for kitchen counters, display cases, and task areas.",
     slug: "under-cabinet",
-    image: "https://images.pexels.com/photos/2062431/pexels-photo-2062431.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
+    image: `${BLOB}/2026/05/Under%20Cabinet%201.png`,
   },
   {
     name: "Commercial Fixtures",
     desc: "Industrial-grade LED solutions engineered for retail, warehouse, and office environments.",
     slug: "commercial-fixtures",
     filters: ["Commercial Fixtures", "PL & PLC", "Tubes"],
-    image: "https://images.pexels.com/photos/236380/pexels-photo-236380.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
+    image: `${BLOB}/2026/05/Commercial%201.png`,
   },
 ];
 
@@ -51,7 +53,7 @@ const featuredCategory = {
   name: "Emergency & Exit",
   desc: "Code-compliant emergency lighting and illuminated exit signs trusted in facilities across Canada.",
   slug: "emergency-exit",
-  image: "https://images.pexels.com/photos/1078884/pexels-photo-1078884.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop",
+  image: `${BLOB}/2026/05/Emergency%201.png`,
 };
 
 export default function CategoriesShowcase() {
