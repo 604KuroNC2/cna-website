@@ -142,7 +142,7 @@ export default function Footer() {
             © {new Date().getFullYear()} CNA Lighting. All rights reserved.
           </p>
           <p className="text-white/20 text-xs">
-            Delivering exceptional lighting solutions to Canadians
+            Illuminating Canadians for almost 4 decades...
           </p>
         </div>
       </div>
