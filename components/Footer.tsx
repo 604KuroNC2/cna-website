@@ -142,7 +142,7 @@ export default function Footer() {
             © {new Date().getFullYear()} CNA Lighting. All rights reserved.
           </p>
           <p className="text-white/20 text-xs">
-            Premium LED Solutions · Made in Canada
+            Premium LED Solutions
           </p>
         </div>
       </div>
