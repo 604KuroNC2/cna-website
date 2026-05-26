@@ -3,5 +3,8 @@
     "allow": [
       "Bash(npm --version)"
     ]
+  },
+  "enabledPlugins": {
+    "semgrep@claude-plugins-official": false
   }
 }
