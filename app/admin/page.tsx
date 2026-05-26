@@ -221,7 +221,7 @@ export default function AdminPage() {
       <Navbar />
 
       <div
-        className="pt-20"
+        className="pt-36"
         style={{ background: "linear-gradient(135deg, #00002a 0%, #000060 50%, #000080 100%)" }}
       >
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

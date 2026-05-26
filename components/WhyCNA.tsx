@@ -32,7 +32,7 @@ const features = [
       </svg>
     ),
     title: "Long Rated Life",
-    desc: "15,000–25,000+ hour rated life (L70) on most products. Fewer replacements, lower maintenance costs.",
+    desc: "15,000–50,000+ hour rated life (L70) on most products. Fewer replacements, lower maintenance costs.",
   },
   {
     icon: (

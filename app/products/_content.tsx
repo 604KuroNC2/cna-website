@@ -229,7 +229,7 @@ function ProductsContent({ mainSlug, sub1Slug }: ProductsPageContentProps) {
       {/* Page header */}
       <div
         ref={headerRef}
-        className="pt-20 pb-0"
+        className="pt-36 pb-0"
         style={{
           background: "linear-gradient(135deg, #00002a 0%, #000060 50%, #000080 100%)",
         }}

@@ -13,6 +13,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [expandedMobile, setExpandedMobile] = useState<string | null>(null);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
   const navRef = useRef<HTMLElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const linksRef = useRef<HTMLDivElement>(null);
@@ -30,15 +31,21 @@ export default function Navbar() {
     const logo = logoRef.current;
     const links = linksRef.current ? Array.from(linksRef.current.children) : [];
     const anim1 = gsap.fromTo(logo,
-      { opacity: 0, x: -30 },
-      { opacity: 1, x: 0, duration: 0.7, ease: "power3.out", delay: 0.1, clearProps: "all" }
+      { opacity: 0, y: -20 },
+      { opacity: 1, y: 0, duration: 0.7, ease: "power3.out", delay: 0.1, clearProps: "all" }
     );
     const anim2 = gsap.fromTo(links,
       { opacity: 0, y: -12 },
-      { opacity: 1, y: 0, stagger: 0.05, duration: 0.5, ease: "power2.out", delay: 0.2, clearProps: "all" }
+      { opacity: 1, y: 0, stagger: 0.05, duration: 0.5, ease: "power2.out", delay: 0.3, clearProps: "all" }
     );
     return () => { anim1.kill(); anim2.kill(); };
   }, [categories]);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const handleMouseEnter = useCallback((name: string) => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
@@ -66,82 +73,108 @@ export default function Navbar() {
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center min-h-16 lg:min-h-20 py-2 gap-y-1">
-          {/* Logo */}
-          <div ref={logoRef}>
-            <Link href="/" className="flex items-center gap-3">
-              <div className="relative h-10 w-32">
+
+        {/* Row 1: centered logo */}
+        <div className="hidden md:flex justify-center items-center relative">
+          {/* Mobile hamburger anchor — hidden on desktop, kept for layout parity */}
+          <div ref={logoRef} className="flex justify-center py-2">
+            <Link href="/" className="flex items-center">
+              <div
+                className="relative overflow-hidden"
+                style={{
+                  width: scrolled ? "128px" : "256px",
+                  height: scrolled ? "40px"  : "80px",
+                  transition: "width 0.35s ease, height 0.35s ease",
+                }}
+              >
                 <Image
                   src="/brand_assets/CNA Logo - White with Alpha Background.png"
                   alt="CNA Lighting"
                   fill
-                  className="object-contain object-left"
+                  className="object-contain"
                   priority
                 />
               </div>
             </Link>
           </div>
+        </div>
 
-          {/* Desktop nav */}
-          <div ref={linksRef} className="hidden md:flex flex-1 flex-wrap items-center gap-0.5 justify-center">
-            {categories.map((cat) => (
-              <div
-                key={cat.name}
-                className="relative"
-                onMouseEnter={() => handleMouseEnter(cat.name)}
-                onMouseLeave={handleMouseLeave}
+        {/* Row 2: category menus — desktop */}
+        <div
+          ref={linksRef}
+          className="hidden md:flex flex-wrap items-center justify-center gap-0.5 border-t border-white/10"
+          style={{ paddingTop: "2px", paddingBottom: "2px" }}
+        >
+          {categories.map((cat) => (
+            <div
+              key={cat.name}
+              className="relative"
+              onMouseEnter={() => handleMouseEnter(cat.name)}
+              onMouseLeave={handleMouseLeave}
+            >
+              <button
+                onClick={() => navigateTo(`/products/${toSlug(cat.name)}`)}
+                className="relative px-3 py-2 text-xs font-medium tracking-wide uppercase text-white/80 hover:text-white transition-colors duration-200 flex items-center gap-1 group"
               >
-                <button
-                  onClick={() => navigateTo(`/products/${toSlug(cat.name)}`)}
-                  className="relative px-3 py-2 text-xs font-medium tracking-wide uppercase text-white/80 hover:text-white transition-colors duration-200 flex items-center gap-1 group"
+                {cat.name}
+                <svg
+                  className={`w-3 h-3 opacity-50 transition-transform duration-200 ${activeDropdown === cat.name ? "rotate-180" : ""}`}
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
                 >
-                  {cat.name}
-                  <svg
-                    className={`w-3 h-3 opacity-50 transition-transform duration-200 ${activeDropdown === cat.name ? "rotate-180" : ""}`}
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                  </svg>
-                  <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-[#FFD700] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-                </button>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+                <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-[#FFD700] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+              </button>
 
-                {/* Dropdown */}
-                {activeDropdown === cat.name && cat.subcategories.length > 0 && (
+              {/* Dropdown */}
+              {activeDropdown === cat.name && cat.subcategories.length > 0 && (
+                <div
+                  className="absolute top-full left-1/2 -translate-x-1/2 pt-1 z-50"
+                  onMouseEnter={() => handleMouseEnter(cat.name)}
+                  onMouseLeave={handleMouseLeave}
+                >
                   <div
-                    className="absolute top-full left-0 pt-1 z-50"
-                    onMouseEnter={() => handleMouseEnter(cat.name)}
-                    onMouseLeave={handleMouseLeave}
+                    className="min-w-[200px] rounded-sm overflow-hidden"
+                    style={{
+                      background: "linear-gradient(135deg, #00002a 0%, #000060 100%)",
+                      border: "1px solid rgba(255,215,0,0.15)",
+                      boxShadow: "0 16px 48px rgba(0,0,0,0.5)",
+                    }}
                   >
-                    <div
-                      className="min-w-[200px] rounded-sm overflow-hidden"
-                      style={{
-                        background: "linear-gradient(135deg, #00002a 0%, #000060 100%)",
-                        border: "1px solid rgba(255,215,0,0.15)",
-                        boxShadow: "0 16px 48px rgba(0,0,0,0.5)",
-                      }}
-                    >
-                      <div className="h-0.5 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent" />
-                      <div className="py-1.5">
-                        {cat.subcategories.map((sub) => (
-                          <button
-                            key={sub.name}
-                            onClick={() => navigateTo(`/products/${toSlug(cat.name)}/${toSlug(sub.name)}`)}
-                            className="w-full text-left px-4 py-2 text-xs text-white/70 hover:text-[#FFD700] hover:bg-white/5 transition-colors duration-150"
-                          >
-                            {sub.name}
-                          </button>
-                        ))}
-                      </div>
+                    <div className="h-0.5 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent" />
+                    <div className="py-1.5">
+                      {cat.subcategories.map((sub) => (
+                        <button
+                          key={sub.name}
+                          onClick={() => navigateTo(`/products/${toSlug(cat.name)}/${toSlug(sub.name)}`)}
+                          className="w-full text-left px-4 py-2 text-xs text-white/70 hover:text-[#FFD700] hover:bg-white/5 transition-colors duration-150"
+                        >
+                          {sub.name}
+                        </button>
+                      ))}
                     </div>
                   </div>
-                )}
-              </div>
-            ))}
-          </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
 
-          {/* Mobile hamburger */}
+        {/* Mobile row: logo left + hamburger right */}
+        <div className="md:hidden flex items-center justify-between min-h-16 py-2">
+          <Link href="/" className="flex items-center">
+            <div className="relative h-10 w-32">
+              <Image
+                src="/brand_assets/CNA Logo - White with Alpha Background.png"
+                alt="CNA Lighting"
+                fill
+                className="object-contain object-left"
+                priority
+              />
+            </div>
+          </Link>
           <button
-            className="md:hidden flex flex-col gap-1.5 p-2 ml-auto"
+            className="flex flex-col gap-1.5 p-2"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
