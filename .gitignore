@@ -32,3 +32,9 @@ Thumbs.db
 
 # Temporary screenshots (generated at runtime)
 temporary screenshots/
+
+# Local working/source files (deployed version is in public/data/)
+products.csv
+products-copy.csv
+*.xlsx
+*.numbers
