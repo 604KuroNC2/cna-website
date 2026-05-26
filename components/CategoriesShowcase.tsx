@@ -112,6 +112,7 @@ export default function CategoriesShowcase() {
                 src={cat.image}
                 alt={cat.name}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                style={{ objectPosition: "center 25%" }}
                 onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#000060]/92 via-[#000080]/55 to-black/30 group-hover:from-[#000080]/96 transition-all duration-300" />
@@ -119,10 +120,16 @@ export default function CategoriesShowcase() {
 
               <div className="relative p-7 flex flex-col justify-end h-full" style={{ minHeight: "260px" }}>
                 <div className="mt-auto">
-                  <h3 className="font-display font-black text-2xl text-white mb-2 group-hover:text-[#FFD700] transition-colors duration-300 leading-tight">
+                  <h3
+                    className="font-display font-black text-2xl text-white mb-2 group-hover:text-[#FFD700] transition-colors duration-300 leading-tight"
+                    style={{ textShadow: "0 1px 3px rgba(0,0,0,0.9), 0 0 16px rgba(0,0,0,0.7)" }}
+                  >
                     {cat.name}
                   </h3>
-                  <p className="text-white/70 text-sm leading-relaxed mb-3">{cat.desc}</p>
+                  <p
+                    className="text-white/70 text-sm leading-relaxed mb-3"
+                    style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}
+                  >{cat.desc}</p>
 
                   {cat.filters && (
                     <div className="flex flex-wrap gap-1.5 mb-4">
@@ -137,7 +144,10 @@ export default function CategoriesShowcase() {
                     </div>
                   )}
 
-                  <div className="flex items-center gap-2 text-[#FFD700] text-xs font-bold uppercase tracking-widest">
+                  <div
+                    className="flex items-center gap-2 text-[#FFD700] text-xs font-bold uppercase tracking-widest"
+                    style={{ textShadow: "0 1px 3px rgba(0,0,0,0.9)" }}
+                  >
                     Shop Now
                     <svg
                       className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-2"
@@ -162,6 +172,7 @@ export default function CategoriesShowcase() {
             src={featuredCategory.image}
             alt={featuredCategory.name}
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            style={{ objectPosition: "center 25%" }}
             onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#000060]/95 via-[#000080]/70 to-black/30 group-hover:from-[#000080]/98 transition-all duration-300" />
@@ -169,12 +180,21 @@ export default function CategoriesShowcase() {
 
           <div className="relative p-7 flex items-center justify-between h-full" style={{ minHeight: "180px" }}>
             <div>
-              <h3 className="font-display font-black text-2xl text-white mb-2 group-hover:text-[#FFD700] transition-colors duration-300 leading-tight">
+              <h3
+                className="font-display font-black text-2xl text-white mb-2 group-hover:text-[#FFD700] transition-colors duration-300 leading-tight"
+                style={{ textShadow: "0 1px 3px rgba(0,0,0,0.9), 0 0 16px rgba(0,0,0,0.7)" }}
+              >
                 {featuredCategory.name}
               </h3>
-              <p className="text-white/70 text-sm leading-relaxed max-w-xl">{featuredCategory.desc}</p>
+              <p
+                className="text-white/70 text-sm leading-relaxed max-w-xl"
+                style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}
+              >{featuredCategory.desc}</p>
             </div>
-            <div className="flex-shrink-0 ml-8 flex items-center gap-2 text-[#FFD700] text-xs font-bold uppercase tracking-widest">
+            <div
+              className="flex-shrink-0 ml-8 flex items-center gap-2 text-[#FFD700] text-xs font-bold uppercase tracking-widest"
+              style={{ textShadow: "0 1px 3px rgba(0,0,0,0.9)" }}
+            >
               Shop Now
               <svg
                 className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-2"
