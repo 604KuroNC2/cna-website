@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
-import { parseProductsFromCSV, parseProductsFromXLSX } from "@/lib/parseProducts";
 import { validateCatalogFile } from "@/lib/validateUpload";
 
 const DEFAULT_SPECS = {
@@ -183,25 +182,26 @@ export default function AdminPage() {
     }
     setUploadLoading(true);
     try {
-      const nameLower = file.name.toLowerCase();
-      if (nameLower.endsWith(".csv")) {
-        const text = await file.text();
-        const parsed = await parseProductsFromCSV(text);
-        localStorage.setItem("cna_products_cache_v5", text);
-        localStorage.setItem("cna_products_cache_time_v5", Date.now().toString());
-        setUploadSuccess(true);
-        setTimeout(() => { setUploadSuccess(false); setShowUpload(false); }, 2500);
-        void parsed;
-      } else if (nameLower.endsWith(".xlsx") || nameLower.endsWith(".xls")) {
-        const parsed = await parseProductsFromXLSX(file);
-        localStorage.setItem("cna_products_cache_time_v5", "0");
-        setUploadSuccess(true);
-        setTimeout(() => { setUploadSuccess(false); setShowUpload(false); }, 2500);
-        void parsed;
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/admin/upload-catalog", {
+        method: "POST",
+        credentials: "same-origin",
+        body: formData,
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({})) as { error?: string };
+        setUploadError(data.error ?? "Upload failed. Please try again.");
+        return;
       }
+      // Bust the client-side cache so products reload on next page visit
+      localStorage.removeItem("cna_products_cache_v7");
+      localStorage.removeItem("cna_products_cache_time_v7");
+      setUploadSuccess(true);
+      setTimeout(() => { setUploadSuccess(false); setShowUpload(false); }, 2500);
     } catch (e) {
       console.error("Upload failed:", e);
-      setUploadError("Failed to process file. Please check the format.");
+      setUploadError("Network error. Please check your connection and try again.");
     } finally {
       setUploadLoading(false);
     }
@@ -307,11 +307,9 @@ export default function AdminPage() {
         </div>
 
         <div className="bg-[#000080]/06 rounded-sm p-4 mb-8 text-sm text-[#000080]">
-          <strong>How this works:</strong> Changes are saved in your browser (localStorage) and
-          applied immediately when browsing products. To make changes permanent across all
-          browsers/devices, click <strong>Export JSON</strong> and replace the{" "}
-          <code className="bg-[#000080]/10 px-1 rounded text-xs">spec-visibility.json</code> file
-          in the project root, then restart the dev server.
+          <strong>How this works:</strong> Spec visibility changes are saved in your browser (localStorage).
+          To make them permanent for all users, click <strong>Export JSON</strong> and check that file into the repository.
+          Catalog CSV uploads go directly to Vercel Blob — all visitors see updated products within 60 seconds.
         </div>
 
         {/* Spec groups */}
@@ -444,7 +442,7 @@ export default function AdminPage() {
                   </svg>
                 </div>
                 <p className="font-bold text-[#000080] text-lg">Catalog Updated!</p>
-                <p className="text-gray-500 text-sm mt-1">Reload the products page to see changes.</p>
+                <p className="text-gray-500 text-sm mt-1">Changes are live for all visitors within 60 seconds.</p>
               </div>
             ) : (
               <>
@@ -473,13 +471,13 @@ export default function AdminPage() {
                     {uploadLoading ? "Processing..." : "Drop your file here"}
                   </p>
                   {!uploadLoading && <p className="text-gray-400 text-sm">or click to browse</p>}
-                  <p className="text-gray-300 text-xs mt-3">Supports .csv and .xlsx files</p>
+                  <p className="text-gray-300 text-xs mt-3">Supports .csv files</p>
                 </div>
 
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept=".csv,.xlsx,.xls"
+                  accept=".csv"
                   className="hidden"
                   onChange={(e) => {
                     const file = e.target.files?.[0];
@@ -499,7 +497,7 @@ export default function AdminPage() {
                 <div className="mt-6 p-4 bg-[#000080]/[0.04] rounded-sm">
                   <p className="text-xs text-gray-500 leading-relaxed">
                     <strong className="text-[#000080]">CSV format:</strong> Must match the CNA product catalog column headers.
-                    Upload a new file to replace the current product database. The catalog will reload automatically.
+                    The file is uploaded to Vercel Blob and all visitors see the updated catalog within 60 seconds. Encoding is handled automatically.
                   </p>
                 </div>
               </>

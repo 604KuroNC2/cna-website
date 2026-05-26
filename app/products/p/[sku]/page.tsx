@@ -6,7 +6,6 @@ import Link from "next/link";
 import gsap from "gsap";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { parseProductsFromCSV } from "@/lib/parseProducts";
 import { getProductSpecs, groupSpecsByCategory, getVisibleSpecs } from "@/lib/specConfig";
 import { Product, SpecConfig } from "@/lib/types";
 import { toBlobShortUrl } from "@/lib/blobUrl";
@@ -45,19 +44,23 @@ export default function ProductDetailPage() {
 
   const findProduct = useCallback(async () => {
     try {
-      // Check cache first
-      const cached = localStorage.getItem("cna_products_cache_v6");
-      let csvText = cached;
+      let products: Product[];
 
-      if (!csvText) {
-        const res = await fetch("/data/products.csv");
-        if (!res.ok) throw new Error("CSV not found");
-        csvText = await res.text();
-        localStorage.setItem("cna_products_cache_v6", csvText);
-        localStorage.setItem("cna_products_cache_time_v6", Date.now().toString());
+      const cached = localStorage.getItem("cna_products_cache_v7");
+      const cacheTime = localStorage.getItem("cna_products_cache_time_v7");
+      const ONE_HOUR = 60 * 60 * 1000;
+
+      if (cached && cacheTime && Date.now() - parseInt(cacheTime) < ONE_HOUR) {
+        products = JSON.parse(cached) as Product[];
+      } else {
+        const res = await fetch("/api/products-data");
+        if (!res.ok) throw new Error("Products API error");
+        const data = await res.json() as { products: Product[] };
+        products = data.products;
+        localStorage.setItem("cna_products_cache_v7", JSON.stringify(products));
+        localStorage.setItem("cna_products_cache_time_v7", Date.now().toString());
       }
 
-      const products = await parseProductsFromCSV(csvText!);
       const found = products.find(
         (p) => p.SKU === sku || p.SKU.trim() === sku.trim()
       );

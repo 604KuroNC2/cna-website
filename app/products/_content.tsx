@@ -7,7 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
-import { parseProductsFromCSV, buildCategoryTree, filterProducts, getUniqueCCTs } from "@/lib/parseProducts";
+import { buildCategoryTree, filterProducts, getUniqueCCTs } from "@/lib/parseProducts";
 import { Product, CategoryTree } from "@/lib/types";
 import { toSlug } from "@/lib/slugs";
 
@@ -68,40 +68,38 @@ function ProductsContent({ mainSlug, sub1Slug }: ProductsPageContentProps) {
     window.history.replaceState(null, "", url);
   }, [filters.mainCategory, filters.subCategory1]);
 
-  // Load products from CSV
-  const loadProducts = useCallback(async (csvText: string) => {
-    try {
-      const parsed = await parseProductsFromCSV(csvText);
-      setProducts(parsed);
-      setCategories(buildCategoryTree(parsed));
-      setCctOptions(getUniqueCCTs(parsed));
-      localStorage.setItem("cna_products_cache_v6", csvText);
-      localStorage.setItem("cna_products_cache_time_v6", Date.now().toString());
-    } catch (e) {
-      console.error("Failed to parse products:", e);
-    } finally {
-      setLoading(false);
-    }
+  // Load products from JSON array
+  const loadProducts = useCallback((parsed: Product[]) => {
+    setProducts(parsed);
+    setCategories(buildCategoryTree(parsed));
+    setCctOptions(getUniqueCCTs(parsed));
+    setLoading(false);
   }, []);
 
   useEffect(() => {
-    const cached = localStorage.getItem("cna_products_cache_v6");
-    const cacheTime = localStorage.getItem("cna_products_cache_time_v6");
+    const cached = localStorage.getItem("cna_products_cache_v7");
+    const cacheTime = localStorage.getItem("cna_products_cache_time_v7");
     const ONE_HOUR = 60 * 60 * 1000;
 
     if (cached && cacheTime && Date.now() - parseInt(cacheTime) < ONE_HOUR) {
-      loadProducts(cached);
-      return;
+      try {
+        loadProducts(JSON.parse(cached));
+        return;
+      } catch {}
     }
 
-    fetch("/data/products.csv")
+    fetch("/api/products-data")
       .then((r) => {
-        if (!r.ok) throw new Error("CSV not found");
-        return r.text();
+        if (!r.ok) throw new Error("Products API error");
+        return r.json() as Promise<{ products: Product[] }>;
       })
-      .then(loadProducts)
+      .then(({ products }) => {
+        localStorage.setItem("cna_products_cache_v7", JSON.stringify(products));
+        localStorage.setItem("cna_products_cache_time_v7", Date.now().toString());
+        loadProducts(products);
+      })
       .catch((err) => {
-        console.error("Failed to load products CSV:", err);
+        console.error("Failed to load products:", err);
         setLoading(false);
       });
   }, [loadProducts]);

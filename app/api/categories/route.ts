@@ -1,16 +1,14 @@
 import { NextResponse } from "next/server";
-import { readFileSync } from "fs";
-import { join } from "path";
 import Papa from "papaparse";
 import { buildCategoryTree } from "@/lib/parseProducts";
+import { fetchCatalogText } from "@/lib/catalogBlob";
 import { Product } from "@/lib/types";
 
 export const revalidate = 3600;
 
 export async function GET() {
   try {
-    const csvPath = join(process.cwd(), "public", "data", "products.csv");
-    const csvText = readFileSync(csvPath, "utf-8");
+    const csvText = await fetchCatalogText();
 
     const result = Papa.parse<Record<string, string>>(csvText, {
       header: true,
