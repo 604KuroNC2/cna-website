@@ -175,8 +175,8 @@ export default function CategoriesShowcase() {
             src={featuredCategory.image}
             alt={featuredCategory.name}
             fill
-            sizes="(max-width: 1280px) 100vw, 1280px"
-            quality={65}
+            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 100vw, 1280px"
+            quality={45}
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             style={{ objectPosition: "center 25%" }}
           />

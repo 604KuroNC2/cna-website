@@ -14,7 +14,10 @@ export default function Hero() {
   const beam2Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Particle system
+    // Skip heavy animations on mobile — content renders immediately at full opacity
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -121,11 +124,11 @@ export default function Hero() {
         background: "linear-gradient(135deg, #00002a 0%, #000060 35%, #000080 65%, #0000a0 100%)",
       }}
     >
-      {/* Particle canvas */}
+      {/* Particle canvas — desktop only */}
       <canvas
         ref={canvasRef}
         id="particle-canvas"
-        className="absolute inset-0 w-full h-full"
+        className="absolute inset-0 w-full h-full hidden md:block"
       />
 
       {/* Radial glow orbs */}
