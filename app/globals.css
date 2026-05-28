@@ -51,26 +51,40 @@ html {
   z-index: 1;
 }
 
-/* Gold shimmer text */
+/* Gold shimmer text — composited: static gradient + translateX sweep on ::after */
 .gold-shimmer {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
   background: linear-gradient(
     90deg,
     var(--gold-dark) 0%,
-    var(--gold) 30%,
-    #fff7aa 50%,
-    var(--gold) 70%,
+    var(--gold) 40%,
     var(--gold-dark) 100%
   );
-  background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: shimmer 4s linear infinite;
 }
 
-@keyframes shimmer {
-  0% { background-position: 0% center; }
-  100% { background-position: 200% center; }
+.gold-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 247, 170, 0.55) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  animation: shimmer-sweep 4s linear infinite;
+  will-change: transform;
+}
+
+@keyframes shimmer-sweep {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
 }
 
 /* Navy gradient background */

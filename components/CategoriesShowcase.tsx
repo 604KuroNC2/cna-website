@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -108,12 +109,13 @@ export default function CategoriesShowcase() {
               className="category-card group relative overflow-hidden rounded-sm border border-gray-100 hover:border-[#000080]/30 transition-all duration-300 hover:shadow-[0_8px_40px_rgba(0,0,128,0.15)]"
               style={{ minHeight: "260px" }}
             >
-              <img
+              <Image
                 src={cat.image}
                 alt={cat.name}
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
                 style={{ objectPosition: "center 25%" }}
-                onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#000060]/92 via-[#000080]/55 to-black/30 group-hover:from-[#000080]/96 transition-all duration-300" />
               <div className="absolute top-0 left-0 right-0 h-0.5 bg-[#FFD700] scale-x-0 group-hover:scale-x-100 transition-transform duration-400 origin-left" />
@@ -168,12 +170,13 @@ export default function CategoriesShowcase() {
           className="category-card group relative overflow-hidden rounded-sm border border-gray-100 hover:border-[#000080]/30 transition-all duration-300 hover:shadow-[0_8px_40px_rgba(0,0,128,0.15)] block"
           style={{ minHeight: "180px" }}
         >
-          <img
+          <Image
             src={featuredCategory.image}
             alt={featuredCategory.name}
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            fill
+            sizes="100vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
             style={{ objectPosition: "center 25%" }}
-            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#000060]/95 via-[#000080]/70 to-black/30 group-hover:from-[#000080]/98 transition-all duration-300" />
           <div className="absolute top-0 left-0 right-0 h-0.5 bg-[#FFD700] scale-x-0 group-hover:scale-x-100 transition-transform duration-400 origin-left" />
