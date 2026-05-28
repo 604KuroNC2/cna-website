@@ -38,3 +38,5 @@ products.csv
 products-copy.csv
 *.xlsx
 *.numbers
+.vercel
+.env*
