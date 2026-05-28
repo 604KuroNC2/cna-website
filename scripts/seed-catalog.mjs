@@ -42,7 +42,9 @@ console.log(`Uploading ${utf8.length} bytes to Vercel Blob at ${CATALOG_PATHNAME
 const { url } = await put(CATALOG_PATHNAME, utf8, {
   access: "public",
   addRandomSuffix: false,
+  allowOverwrite: true,
   contentType: "text/csv; charset=utf-8",
+  token: process.env.BLOB_READ_WRITE_TOKEN,
 });
 
 console.log(`Done! Blob URL: ${url}`);
