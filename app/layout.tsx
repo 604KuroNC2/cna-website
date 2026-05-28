@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Barlow_Condensed, DM_Sans, Roboto } from "next/font/google";
 import "./globals.css";
 import dynamic from "next/dynamic";
+import { Analytics } from "@vercel/analytics/next";
 
 const CustomScrollbar = dynamic(() => import("@/components/CustomScrollbar"), { ssr: false });
 
@@ -47,6 +48,7 @@ export default function RootLayout({
       <body>
         {children}
         <CustomScrollbar />
+        <Analytics />
       </body>
     </html>
   );
