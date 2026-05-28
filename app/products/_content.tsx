@@ -77,8 +77,8 @@ function ProductsContent({ mainSlug, sub1Slug }: ProductsPageContentProps) {
   }, []);
 
   useEffect(() => {
-    const cached = localStorage.getItem("cna_products_cache_v7");
-    const cacheTime = localStorage.getItem("cna_products_cache_time_v7");
+    const cached = localStorage.getItem("cna_products_cache_v8");
+    const cacheTime = localStorage.getItem("cna_products_cache_time_v8");
     const ONE_HOUR = 60 * 60 * 1000;
 
     if (cached && cacheTime && Date.now() - parseInt(cacheTime) < ONE_HOUR) {
@@ -94,8 +94,8 @@ function ProductsContent({ mainSlug, sub1Slug }: ProductsPageContentProps) {
         return r.json() as Promise<{ products: Product[] }>;
       })
       .then(({ products }) => {
-        localStorage.setItem("cna_products_cache_v7", JSON.stringify(products));
-        localStorage.setItem("cna_products_cache_time_v7", Date.now().toString());
+        localStorage.setItem("cna_products_cache_v8", JSON.stringify(products));
+        localStorage.setItem("cna_products_cache_time_v8", Date.now().toString());
         loadProducts(products);
       })
       .catch((err) => {
