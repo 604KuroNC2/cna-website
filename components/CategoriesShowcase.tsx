@@ -113,7 +113,8 @@ export default function CategoriesShowcase() {
                 src={cat.image}
                 alt={cat.name}
                 fill
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 420px"
+                quality={65}
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                 style={{ objectPosition: "center 25%" }}
               />
@@ -174,7 +175,8 @@ export default function CategoriesShowcase() {
             src={featuredCategory.image}
             alt={featuredCategory.name}
             fill
-            sizes="100vw"
+            sizes="(max-width: 1280px) 100vw, 1280px"
+            quality={65}
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             style={{ objectPosition: "center 25%" }}
           />
