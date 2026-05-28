@@ -113,7 +113,7 @@ export default function CategoriesShowcase() {
                 src={cat.image}
                 alt={cat.name}
                 fill
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 420px"
+                sizes="(max-width: 480px) calc(100vw - 2rem), (max-width: 640px) calc(100vw - 2rem), (max-width: 1024px) calc(50vw - 2rem), 420px"
                 quality={65}
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                 style={{ objectPosition: "center 25%" }}
